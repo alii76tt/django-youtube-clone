@@ -80,6 +80,7 @@
                           <h5 class="card-title">{{last_video.title}}</h5>
                           <p class="card-text">{{last_video.content|safe|linebreaks|truncatechars:100}}</p>
                           <p class="card-text"><small class="text-muted">{{last_video.publishing_date|date:"M d, Y"}}</small></p>
+                          <a href="{{last_video.get_absolute_url}}" class="btn btn-block btn-info btn-sm">See More</a>
                         </div>
                     </div>
                   {% else %}
