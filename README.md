@@ -2,7 +2,7 @@
 <p align='center'>Basic YouTube clone website built in django web framework using Python.</p>
 
 <p align="center">
-    <a href="#">
+    <a href="https://alii76ttytclone.pythonanywhere.com/">
         <img src="https://www.pythonanywhere.com/static/anywhere/images/PA-logo.svg" style="width: 15em;"
             alt="Update Github Stats" title="django-yt-clone">
     </a>
