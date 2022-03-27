@@ -9,8 +9,8 @@
     {% include 'base/message.html' %}
     {% if request.user.is_authenticated %}
     <div class="d-flex justify-content-center">
-        {% if avatar.image %}
-          <img src="{{avatar.image.url}}" alt="mdo" width="150" height="150" class="rounded-circle shadow-sm p-1 mb-1 bg-dark">
+        {% if request.user.channel.avatar %}
+          <img src="{{request.user.channel.avatar.url}}" alt="mdo" width="150" height="150" class="rounded-circle shadow-sm p-1 mb-1 bg-dark">
         {% else %}
           <img src="{% static 'images/channel/avatar/avatar.jpg' %}" alt="mdo" width="150" height="150" class="rounded-circle shadow-sm p-1 mb-1 bg-dark">
         {% endif %}
