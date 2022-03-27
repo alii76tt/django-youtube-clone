@@ -1,0 +1,157 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block description %}{{channel.description|truncatechars:150}}{% endblock description %}
+{% block keywords %}{{channel.description|truncatechars:150}}{% endblock keywords %}
+{% block title %}{{channel.channel_name}}{% endblock title %}
+{% block content %}
+<div class="container mt-3">
+  {% include 'base/message.html' %}
+    <div class="p-4 p-md-5 mb-4 text-white rounded" style="background-image: url('{% if channel.banner_image %}{{channel.banner_image.url}}{% else %} {% static '/images/channel/banner/sage.png' %} {% endif %}');">
+      <div class="d-flex justify-content-center">
+        {% if channel.avatar %}
+          <img src="{{channel.avatar.url}}" alt="mdo" width="150" height="150" class="rounded-circle shadow-sm p-1 mb-1 bg-dark">
+        {% else %}
+          <img src="{% static 'images/channel/avatar/avatar.jpg' %}" alt="mdo" width="150" height="150" class="rounded-circle shadow-sm p-1 mb-1 bg-dark">
+        {% endif %}
+      </div>  
+      <div class="col-md-6 px-0 h-100 text-white text-shadow-1" style="text-shadow: 0 0.25rem 0.5rem rgb(0 0 0 / 25%);">
+          <h1 class="display-4 fst-italic rounded" style="text-shadow: 1px 1px #000000;">{{channel.channel_name}}</h1>
+          <p class="lead my-3" style="text-shadow: 1px 1px #000000;">{{channel.slogan}}</p>
+          <p class="lead my-3" style="text-shadow: 1px 1px #000000;">{{subscribe_total}} Subscribe</p>
+        </div>
+      </div>
+      {% if user.is_authenticated %}
+        {% if channel.user_id == request.user.id %}
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal">
+          Delete
+        </button>
+        <a href="{{channel.get_update_url}}" role="buton" class="btn btn-block btn-info btn-sm">Update</a>
+        <a href="{% url 'channel:createChannel' %}" role="buton" class="btn btn-block btn-warning btn-sm">Create</a>
+        {% endif %} 
+      {% endif %}
+      <div class="row g-3 align-items-center">
+        {% if user.is_authenticated %}
+            {% if not channel.user_id == request.user.id %}
+              <form action="{% url 'channel:subscribeChannel' channel.pk %}" method="post">
+                  {% csrf_token %}
+                  {% if subscribe %}
+                      <button type="submit" name="video_subscribe_id" value="{{channel.id}}" class="btn btn-secondary">Unsubscribe</button>
+                  {% else %}
+                      <button type="submit" name="video_subscribe_id" value="{{channel.id}}" class="btn btn-danger">Subscribe</button>
+                  {% endif %} 
+              </form>
+            {% endif %}
+        {% else %}
+        <a href="{% url 'account:login' %}" class="btn btn-danger btn-sm" style="width:150px">Login to Subscribe</a>
+        {% endif %}  
+        <h4 class="text-start">Share</h4>
+        <!-- AddToAny BEGIN -->
+        <div class="a2a_kit a2a_kit_size_32 a2a_default_style">
+          <a class="a2a_dd" href="https://www.addtoany.com/share"></a>
+          <a class="a2a_button_facebook"></a>
+          <a class="a2a_button_twitter"></a>
+          <a class="a2a_button_email"></a>
+          <a class="a2a_button_whatsapp"></a>
+          <a class="a2a_button_telegram"></a>
+          <a class="a2a_button_linkedin"></a>
+        </div>
+        <script async src="https://static.addtoany.com/menu/page.js"></script>
+        <!-- AddToAny END -->
+      </div>
+      
+      <div class="row mb-5">
+        <div class="col-4">
+          <div class="list-group" id="list-tab" role="tablist">
+            <a class="list-group-item list-group-item-action" id="list-home-list" data-bs-toggle="list" href="#list-home" role="tab" aria-controls="list-home">Home</a>
+            <a class="list-group-item list-group-item-action" id="list-videos-list" data-bs-toggle="list" href="#list-videos" role="tab" aria-controls="list-videos">Videos</a>
+            <a class="list-group-item list-group-item-action" id="list-about-list" data-bs-toggle="list" href="#list-about" role="tab" aria-controls="list-about">About</a>
+          </div>
+        </div>
+        <div class="col-8">
+          <div class="tab-content" id="nav-tabContent">
+            <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
+                <div class="ratio ratio-16x9">
+                  {% if last_video %}
+                    <div class="card mb-3">
+                        <video  width="100%" height="100%" controls autoplay>
+                            <source src="{{last_video.video.url}}" type="video/mp4" />
+                        </video>
+                        <div class="card-body">
+                          <h5 class="card-title">{{last_video.title}}</h5>
+                          <p class="card-text">{{last_video.content|safe|linebreaks|truncatechars:100}}</p>
+                          <p class="card-text"><small class="text-muted">{{last_video.publishing_date|date:"M d, Y"}}</small></p>
+                        </div>
+                    </div>
+                  {% else %}
+                    <h5 class="card-title">Video not found.</h5>
+                  {% endif %}
+                </div>
+            </div>
+            <div class="tab-pane fade" id="list-videos" role="tabpanel" aria-labelledby="list-videos-list">
+                <div class="row row-cols-1 row-cols-sm-2 ">
+                  {% if videos %}
+                    {% for video in videos %}
+                    <a href="{{video.get_absolute_url}}"  class="m-1 h-25" style="text-decoration: none; width: 25rem;">
+                        <div class="col">
+                          <div class="card card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg" style="background-image: url('{{video.cover_image.url}}');">
+                            <div class="d-flex flex-column h-50 p-5 pb-3 text-white text-shadow-1">
+                              <h2 class="pt-5 mt-5 mb-4 fs-5 lh-1 fw-bold">{{video.title}}</h2>
+                              <ul class="d-flex list-unstyled mt-auto">
+                                <li class="me-auto">
+                                  {% if video.channel.avatar %}
+                                    <img src="{{video.channel.avatar.url}}" alt="Bootstrap" width="40" height="40" class="rounded-circle border border-white">
+                                  {% else %}
+                                    <img src="https://github.com/twbs.png" alt="Bootstrap" width="40" height="40" class="rounded-circle border border-white">
+                                  {% endif %}
+                                </li>
+                                <li class="d-flex align-items-center me-3">
+                                  <svg class="bi me-2" width="1em" height="1em"><use xlink:href="#geo-fill"/></svg>
+                                  <small>{{video.user.channel.channel_name|upper}}</small>
+                                </li>
+                                <li class="d-flex align-items-center">
+                                  <svg class="bi me-2" width="1em" height="1em"><use xlink:href="#calendar3"/></svg>
+                                  <small>{{video.publishing_date|timesince}} ago</small>
+                                </li>
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+                    </a>
+                    {% endfor %}
+                  {% else %}
+                    <h5 class="card-title">Videos not found.</h5>
+                  {% endif %}
+                </div>
+            </div>
+            <div class="tab-pane fade" id="list-about" role="tabpanel" aria-labelledby="list-about-list">
+                <h1 class="display-4 fst-italic">{{channel.channel_name}} <span class="fs-5">Join Date ({{channel.join_date|date:"M d, Y"  }})</span></h1>
+                <p class="lead mb-0">{{channel.description|safe|linebreaks}}</p>
+                {% if request.user.is_authenticated %}
+                <p class="lead mb-0">Email: {{channel.user.email}}</p>
+                {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p class="fw-bolder" >Are you sure you want to delete {{channel.channel_name|upper}} channel?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <a href="{{channel.get_delete_url}}" role="buton" class="btn btn-block btn-danger btn-sm">Delete</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+

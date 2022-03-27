@@ -1,0 +1,46 @@
+{% extends 'base/base.html' %}
+{% block description %}Subscribtions List{% endblock description %}
+{% block keywords %}Subscribtions List{% endblock keywords %}
+{% block title %}Channels subscribed to {{channel.channel_name}}{% endblock title %}
+{% load static %}
+{% block content %}
+<div class="container px-4 py-5" id="custom-cards">
+    <h2 class="pb-2 border-bottom">SUBSCRIPTIONS</h2>
+    {% include 'base/message.html' %}
+    {% if request.user.is_authenticated %}
+    {% if channels %}
+    <div class="row">
+      {% for channel in channels %}
+      <div class="card m-3" style="max-width: 540px;">
+        <div class="row g-0">
+          <div class="col-md-4">
+            {% if channel.avatar %}
+                <img src="{{channel.avatar.url}}" class="img-fluid img-thumbnail mt-3 rounded-circle" alt="{{channel.channel_name}}" style="max-height: 12em;">
+            {% else %}
+              <img src="{% static 'images/channel/avatar/avatar.jpg' %}" class="img-fluid mt-3 rounded-circle" alt="...">
+            {% endif %}
+          </div>
+          <div class="col-md-8">
+            <div class="card-body">
+              <h5 class="card-title">{{channel.channel_name}}</h5>
+              <p class="card-text">{{channel.slogan}}</p>
+              <p class="card-text"><small class="text-muted">{{channel.total_subscribers}} subscribe</small></p>
+              <a href="{{channel.get_absolute_url}}" class="btn btn-warning stretched-link">Go Channel</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center mt-5">
+      <h2 class="pb-2">You are not subscribed to any channel.</h2>
+    </div>
+    {% endif %}
+    {% else %}
+    <div class="text-center mt-5">
+      <h2 class="pb-2">Sign in to see updates from your favorite YouTube channels</h2>
+    </div>
+    {% endif %}
+</div>
+{% endblock content %}

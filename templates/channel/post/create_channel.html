@@ -1,0 +1,23 @@
+{% extends "base/base.html" %}
+{% block description %}Create Channel{% endblock description %}
+{% block keywords %}Create Channel{% endblock keywords %}
+{% block title %}Create Channel{% endblock title %}
+{% block content %}
+<div class="container mt-3">
+   <div class="col">
+        <h1>CREATE CHANNEL</h1>
+        <hr>
+        {% include 'base/message.html' %}
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="mb-3">
+                {{channelForm.media}}
+                {{channelForm.as_p}}
+            </div>
+            <div class="mb-3 text-center">
+                <input type="submit" value="Create Channel" class="btn btn-warning">
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

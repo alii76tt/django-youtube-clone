@@ -1,0 +1,22 @@
+{% extends "base/base.html" %}
+{% block description %}Update Channel{% endblock description %}
+{% block keywords %}Update Channel{% endblock keywords %}
+{% block title %}Update Channel{% endblock title %}
+{% block content %}
+<div class="container mt-3">
+   <div class="col">
+        <h1>UPDATE CHANNEL</h1>
+        <hr>
+        {% include 'base/message.html' %}
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="mb-3">
+                {{channelForm.media}}
+                {{channelForm.as_p}}
+            </div>
+            <div class="mb-3"></div>
+            <input type="submit" value="Update Channel" class="btn btn-primary">
+        </form>
+    </div>
+</div>
+{% endblock %}

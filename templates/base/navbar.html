@@ -1,0 +1,62 @@
+{% load static %}
+<header class="p-3 bg-dark text-white">
+  <div class="container">
+    <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+      <nav class="navbar navbar-dark bg-dark">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="{% url 'video:index' %}">
+            <img src="{% static 'images/logo.png' %}" alt="" width="100" height="30">
+          </a>
+        </div>
+      </nav>
+        <div class="dropdown nav col-12 col-lg-auto me-lg-auto ml-3 justify-content-center mb-md-0">
+          <a href="#" style="background-color: transparent;" class="d-flex align-items-center col-lg-4 mb-2 mb-lg-0 link-dark text-decoration-none dropdown-toggle list-group-item list-group-item-action text-light" id="dropdownNavLink" data-bs-toggle="dropdown" aria-expanded="false">
+            Menu
+          </a>
+          <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownNavLink">
+            <li><a class="dropdown-item active" href="{% url 'video:index' %}" aria-current="page">Home</a></li>
+            <li><a class="dropdown-item" href="{% url 'channel:channelList' %}">All Channels</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{% url 'video:authorVideos' %}">Your Videos</a></li>
+            <li><a class="dropdown-item" href="{% url 'video:likeVideoList' %}">Your Favorite Videos</a></li>
+            <li><a class="dropdown-item" href="{% url 'channel:subscriptonsList' %}">Subscriptions</a></li>
+          </ul>
+        </div>
+      
+      <form class="col-12 col-lg mb-3 mb-lg-0 me-lg-3" action="/" role="search" method="GET">
+        <input type="search" class="form-control" name="q" value="{{request.GET.q}}" placeholder="Search..." aria-label="Search">
+      </form>
+      {% if request.user.is_authenticated %}
+      <div class="dropdown text-end">
+        {% if request.user.channel %}
+        <a href="#" class="d-block link-dark text-decoration-none text-light dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+          <img src="{{request.user.channel.avatar.url}}" alt="mdo" width="50" height="50" class="rounded-circle">
+        </a>
+        {% else %}
+        <a href="#" class="d-block link-dark text-decoration-none text-light dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+          <img src="{% static 'images/channel/avatar/avatar.png' %}" alt="mdo" width="50" height="50" class="rounded-circle">
+        </a>
+        {% endif %}
+        <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1">
+          <li><a class="dropdown-item" href="{% url 'account:userProfile' %}">{{request.user.get_full_name}}</a></li>
+          <li><a class="dropdown-item" href="{% url 'video:createVideo' %}">New Video</a></li>
+          <li><a class="dropdown-item" href="{% url 'account:updateUserProfile' %}">Settings</a></li>
+          <li><a class="dropdown-item" href="{% url 'account:userProfile' %}">Profile</a></li>
+          {% if request.user.channel %}
+          <li><a class="dropdown-item" href="{% url 'channel:channelDetail' request.user.channel.id %}">Your Channel</a></li>
+          {% else %}
+          <li><a class="dropdown-item" href="{% url 'channel:createChannel' %}">Create Channel</a></li>
+          {% endif %}
+          <li><hr class="dropdown-divider"></li>
+          <li><a class="dropdown-item" href="{% url 'account:logout' %}">Sign out</a></li>
+        </ul>
+      </div>
+      {% else %}
+      <div class="text-end">
+        <a href="{% url 'account:login' %}" class="btn btn-outline-light me-2">Login</a>
+        <a href="{% url 'account:register' %}" class="btn btn-warning">Sign-up</a>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</header>

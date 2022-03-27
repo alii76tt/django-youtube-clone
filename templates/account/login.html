@@ -1,0 +1,30 @@
+{% extends "base/base.html" %}
+{% block description %}Login{% endblock description %}
+{% block keywords %}Login {% endblock keywords %}
+{% block title %}Login{% endblock title %}
+{% block content %}
+<div class="container mt-3">
+    <div class="col">
+        <h1>LOGIN</h1>
+        <hr>
+        <form method="POST">
+            {% csrf_token %}
+            {% if error %}
+                <div class="alert alert-danger">
+                    {{error}}
+                </div>
+            {% endif %}
+            <div class="mb-3">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" class="form-control" name="username">
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" name="password">
+            </div>
+            <div class="mb-3"></div>
+            <input type="submit" value="Login" class="btn btn-primary">
+        </form>
+    </div>
+</div>
+{% endblock %}

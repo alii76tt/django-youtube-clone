@@ -1,0 +1,85 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% block description %}Profile{% endblock description %}
+{% block keywords %}Profile {% endblock keywords %}
+{% block title %}Profile{% endblock title %}
+{% block content %}
+<div class="container px-4 py-5" id="custom-cards">
+    <h2 class="pb-2 border-bottom">Profile</h2>
+    {% include 'base/message.html' %}
+    {% if request.user.is_authenticated %}
+    <div class="d-flex justify-content-center">
+        {% if avatar.image %}
+          <img src="{{avatar.image.url}}" alt="mdo" width="150" height="150" class="rounded-circle shadow-sm p-1 mb-1 bg-dark">
+        {% else %}
+          <img src="{% static 'images/channel/avatar/avatar.jpg' %}" alt="mdo" width="150" height="150" class="rounded-circle shadow-sm p-1 mb-1 bg-dark">
+        {% endif %}
+      </div>
+    <div class="container">
+        <h1 class="display-6 fst-italic text-center">Profile Information</h1>
+        <fieldset disabled>
+        <div class="mb-3">
+            <label for="username" class="form-label">Username</label>
+            <input type="text" id="disabledTextInput" class="form-control" name="username" value="{{request.user.username}}">
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" id="disabledTextInput" class="form-control" name="email" value="{{request.user.email}}">
+        </div>
+        <div class="row mb-3">
+            <div class="col">
+                <label for="firstname" class="form-label">Firstname</label>
+                <input type="text" id="disabledTextInput" class="form-control" name="firstname" value="{{request.user.first_name}}">
+            </div>
+            <div class="col">
+                <label for="lastname" class="form-label">Lastname</label>
+            <input type="text" id="disabledTextInput" class="form-control" name="lastname" value="{{request.user.last_name}}"> 
+            </div>
+        </div>
+        <h5 class="pb-2 border-bottom text-center">Update your Profile! <a href="{% url 'account:updateUserProfile' %}" class="link-danger"> Update</a></h5>
+        {% if channel %}
+        <div class="row mb-3">
+            <h1 class="display-6 fst-italic text-center">Channel Information</h1>
+            <h1 class="display-6 fst-italic">Join Date <span class="fs-5">({{channel.join_date|date:"M d, Y"  }})</span></h1>
+            <div class="col">
+                <label class="form-label">Channel Name</label>
+            <input type="text" id="disabledTextInput" class="form-control" value="{{channel.channel_name}}"> 
+            </div>
+            <div class="col">
+                <label class="form-label">Channel Slogan</label>
+            <input type="text" id="disabledTextInput" class="form-control" value="{{channel.slogan}}"> 
+            </div>
+            <div class="col">
+                <label class="form-label">Channel Subscribe</label>
+            <input type="text" id="disabledTextInput" class="form-control" value="{{channel.subscribers.count}}"> 
+            </div>
+            <div class="col">
+                <label class="form-label">Channel Total Videos</label>
+            <input type="text" id="disabledTextInput" class="form-control" value="{{total_videos}}"> 
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Channel About</label>
+                <textarea class="form-control" rows="2" placeholder="{{channel.description|safe}}"></textarea>
+            </div>
+        </div>
+        {% else %}
+            <h2 class="pb-2 border-bottom text-center">Please create your channel! <a href="{% url 'channel:createChannel' %}" class="link-warning"> Create</a></h2>
+        {% endif %}
+        <div class="mb-3"></div>
+        <h5 class="pb-2 border-bottom text-center">Update your Channel! <a href="{% url 'channel:updateChannel'  channel.id %}" class="link-primary"> Update</a></h5>
+
+    </fieldset>
+    </div>
+
+    {% else %}
+    <div class="text-center mt-5">
+      <h2 class="pb-2">Sign in to see updates from your profile</h2>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+
+<div class="text-center mt-5">
+    <h2 class="pb-2">Something went wrong.</h2>
+  </div>
