@@ -186,15 +186,15 @@
                       <h2 class="pt-5 mt-5 mb-4 fs-4 lh-1 fw-bold">{{item.title}}</h2>
                       <ul class="d-flex list-unstyled mt-auto">
                         <li class="me-auto">
-                          {% if video.channel.avatar %}
-                          <img src="{{video.channel.avatar.url}}" alt="Bootstrap" width="40" height="40" class="rounded-circle border border-white">
+                          {% if item.channel.avatar %}
+                          <img src="{{item.channel.avatar.url}}" alt="Bootstrap" width="40" height="40" class="rounded-circle border border-white">
                           {% else %}
                           <img src="https://github.com/twbs.png" alt="Bootstrap" width="40" height="40" class="rounded-circle border border-white">
                           {% endif %}
                         </li>
                         <li class="d-flex align-items-center me-3">
                           <svg class="bi me-2" width="1em" height="1em"><use xlink:href="#geo-fill"/></svg>
-                          <small>{{video.user.channel.channel_name|upper}}</small>
+                          <small>{{item.user.channel.channel_name|upper}}</small>
                         </li>
                         <li class="d-flex align-items-center">
                           <svg class="bi me-2" width="1em" height="1em"><use xlink:href="#calendar3"/></svg>
