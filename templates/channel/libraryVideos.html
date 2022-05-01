@@ -1,0 +1,68 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block description %}All Channel List · {% endblock description %}
+{% block keywords %}All Channel List · {% endblock keywords %}
+{% block title %}All Channel List · {% endblock title %}
+{% block content %}
+<div class="container mt-3">
+{% include 'base/message.html' %}
+<div class="row g-5">
+    <div class="col-lg-12">
+      <h3 class="pb-4 mb-2 fst-italic border-bottom">
+        {{library.title}} <small>({{library.date|date:"M d, Y"}})</small>
+        {% if request.user.is_authenticated %}
+          <a href="{{library.userLibraryDelete}}" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">Delete List</a>
+          <a href="{{library.get_update_url}}" class="btn btn-sm btn-warning">Update List</a>
+          <a href="{% url 'video:userLibraryCreate' %}" class="btn btn-sm btn-warning">Create New List</a>
+        {% endif %}
+      </h3>
+      
+      <article class="blog-post">
+        {% if request.user.is_authenticated %}
+          <div class="row row-cols-1 row-cols-md-2 g-4">
+          {% for video in videos %}
+            <div class="card" style="width: 18rem;">
+              <img class="card-img-top" src="{{video.cover_image.url}}" alt="{{video.title}}">
+              <div class="card-body">
+                <h5 class="card-title">{{video.title}}</h5>
+                <p class="card-text">{{video.channel.channel_name}} · {{video.publishing_date|date:"M d, Y"}}</p>
+                <a href="{{video.get_absolute_url}}" class="btn btn-primary">Watch Video</a>
+                <form action="{% url 'video:removeLibraryVideo' library.id video.id %}" method="post">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-danger">Remove</button>
+                </form>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+        {% else %}
+            <div class="text-center mt-5">
+                <div class="alert alert-success text-center" role="alert">
+                    Sign in to access the videos you like or save. <a href="{% url 'account:login' %}" class="alert-link">Log in <i class="fa-solid fa-right-to-bracket"></i></a>
+                </div>
+            </div>
+        {% endif %}
+      </article>
+    </div>
+  </div>
+</div>
+
+<!-- List -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Delete List</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p class="fw-bolder" >Are you sure you want to delete {{library.title|upper}} list?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <a href="{{library.get_delete_url}}" role="buton" class="btn btn-block btn-danger">Delete</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}

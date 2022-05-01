@@ -13,12 +13,21 @@ urlpatterns = [
     # sub and like
     path('watch/like/<int:id>/', likeView, name="likeVideo"),
 
+    # library
+    path('library/', userLibrary, name="userLibrary"),
+    path('library/<int:id>/', userLibraryVideos, name="userLibraryVideos"),
+    path('create/library/', userLibraryCreate, name="userLibraryCreate"),
+    path('update/library/<int:id>/', userLibraryUpdate, name="userLibraryUpdate"),
+    path('delete/library/<int:id>/', userLibraryDelete, name="userLibraryDelete"),
+
+    path('add/library/video/<int:id>/<int:video_id>/', addLibraryVideo, name="addLibraryVideo"),
+    path('remove/library/video/<int:id>/<int:video_id>/', removeLibraryVideo, name="removeLibraryVideo"),
 
 
     # like videos authorVideos
     path('like/videos', likeVideos, name="likeVideoList"),
 
     # author
-    path('videos/', authorVideos, name="authorVideos"),
+    path('author/videos/', authorVideos, name="authorVideos"),
 
 ]

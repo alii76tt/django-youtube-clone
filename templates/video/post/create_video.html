@@ -1,22 +1,48 @@
 {% extends "base/base.html" %}
-{% block description %}New Video{% endblock description %}
-{% block keywords %}New Video{% endblock keywords %}
-{% block title %}New Video{% endblock title %}
+{% block description %}New Video · {% endblock description %}
+{% block keywords %}New Vide · {% endblock keywords %}
+{% block title %}New Video · {% endblock title %}
 {% block content %}
-<div class="container mt-3">
-   <div class="col">
-        <h1>CREATE VIDEO</h1>
-        <hr>
-        {% include 'base/message.html' %}
-        <form method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-            <div class="mb-3">
-                {{videoForm.media}}
-                {{videoForm.as_p}}
+<div class="container d-flex justify-content-center mt-5">
+    <div class="col-md-8 col-sm-12">
+        <h1 class="text-center display-4 fst-italic rounded">Create New Video</h1>
+        <div class="container">
+            <div class="col">
+                {% include 'base/message.html' %}
+                <hr>
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="col">
+                        <label  class="form-label">{{videoForm.title.label}}</label>
+                        {{videoForm.title}}
+                    </div>
+                    <div class="mb-3">
+                        <label  class="form-label">{{videoForm.content.label}}</label>
+                        {{videoForm.media}}
+                        {{videoForm.content}}
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col">
+                            <label  class="form-label">{{videoForm.cover_image.label}}</label>
+                            {{videoForm.cover_image}}
+                        </div>
+                        <div class="col">
+                            <label class="form-label">{{videoForm.video.label}}</label>
+                            {{videoForm.video}}
+                        </div>
+                    </div>
+                    <div class="col">
+                        <label class="form-label">{{videoForm.status.label}}</label>
+                        {{videoForm.status}}
+                    </div>
+                    <div class="mb-3 text-center">
+                        <input type="submit" value="Create New Video" class="btn btn-primary">
+                    </div>
+
+                </form>
             </div>
-            <div class="mb-3"></div>
-            <input type="submit" value="Create" class="btn btn-warning">
-        </form>
+        </div>
     </div>
 </div>
+
 {% endblock %}

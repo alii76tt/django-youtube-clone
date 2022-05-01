@@ -1,0 +1,65 @@
+{% extends "base/base.html" %}
+{% block description %}Register · {% endblock description %}
+{% block keywords %}Register · {% endblock keywords %}
+{% block title %}Register · {% endblock title %}
+{% block content %}
+<div class="container d-flex justify-content-center mt-5">
+    <div class="col-md-6 mx-auto">
+        <h1 class="text-center display-4 fst-italic rounded">Sign Up</h1>
+        <div class="container">
+            <div class="col">
+                <hr>
+                <form method="POST">
+                    {% csrf_token %}
+                    {% if error %}
+                    <div class="alert alert-danger">
+                        {{error}}
+                    </div>
+                    {% endif %}
+                    <div class="row mb-3">
+                        <div class="col">
+                            <label for="firstname" class="form-label">First Name</label>
+                            <input type="text" class="form-control" name="firstname" value="{{ firstname }}" required>
+                        </div>
+                        <div class="col">
+                            <label for="lastname" class="form-label">Last Name</label>
+                            <input type="text" class="form-control" name="lastname" value="{{ lastname }}" required>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" name="email" value="{{ email }}" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Username</label>
+                        <input type="text" class="form-control" name="username" value="{{ username }}" required>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" class="form-control" name="password" required>
+                        </div>
+                        <div class="col">
+                            <label for="repassword" class="form-label">Re-Password</label>
+                            <input type="password" class="form-control" name="repassword" required>
+                        </div>
+                    </div>
+                    <div class="mb-3 text-center">
+                        <input type="submit" value="Register" class="btn btn-primary">
+                    </div>
+                    
+                    <div class="text-center mt-1">
+                        <div class="alert alert-success fs-3" role="alert">
+                            Have an account? <a href="{% url 'account:login' %}" class="alert-link">Login</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

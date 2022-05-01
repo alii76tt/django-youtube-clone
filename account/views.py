@@ -29,7 +29,7 @@ def loginView(request):
     return render(request, "account/login.html")
 
 
-def register(request):
+def signUp(request):
     if request.user.is_authenticated:
         return redirect("video:index")
 
@@ -43,9 +43,9 @@ def register(request):
 
         if password == repassword:
             if User.objects.filter(username=username).exists():
-                return render(request, "account/register.html",
+                return render(request, "account/sign_up.html",
                               {
-                                  "error": "Username is already used.",
+                                  "error": "Username is already used!",
                                   "username": username,
                                   "email": email,
                                   "firstname": firstname,
@@ -53,9 +53,9 @@ def register(request):
                               })
             else:
                 if User.objects.filter(email=email).exists():
-                    return render(request, "account/register.html",
+                    return render(request, "account/sign_up.html",
                                   {
-                                      "error": "Email is already used.",
+                                      "error": "Email is already used!",
                                       "username": username,
                                       "email": email,
                                       "firstname": firstname,
@@ -68,7 +68,7 @@ def register(request):
                     login(request, user)
                     return redirect("channel:createChannel")
         else:
-            return render(request, "account/register.html", {
+            return render(request, "account/sign_up.html", {
                 "error": "Passwords does not match!",
                 "username": username,
                 "email": email,
@@ -76,13 +76,13 @@ def register(request):
                 "lastname": lastname
             })
 
-    return render(request, "account/register.html")
+    return render(request, "account/sign_up.html")
 
 
 @login_required
 def logoutView(request):
     logout(request)
-    return redirect("video:index")
+    return redirect("account:login")
 
 # user
 
@@ -94,34 +94,22 @@ def userProfile(request):
         context = {
             'channel': channel,
             'total_videos': Video.objects.filter(channel_id=channel.id, user_id=request.user.id).count(),
-            'channel': channel,
         }
-    else:
-        messages.warning(
-        request, 'You must create a channel to subscribe channels!')
-        return redirect('channel:createChannel')
+        return render(request, 'account/user/profile.html', context)
+    context = {}
     return render(request, 'account/user/profile.html', context)
 
 
 @login_required
 def updateUserProfile(request):
-    u_form = UserUpdateForm(request.POST, instance=request.user)
     if request.method == 'POST':
-        if u_form.is_valid():
-            password = request.POST["password"]
-            repassword = request.POST["repassword"]
+        user_form = UserUpdateForm(request.POST, instance=request.user)
+        if user_form.is_valid():
+            user_form.save()
+            messages.success(request, 'Your Profile has been updated!')
+            return redirect('account:userProfile')
+        else:
+            return render(request, 'account/update_profile.html', {'form': user_form})
 
-            if password == repassword:
-                user = u_form.save()
-                messages.success(request, 'Your Profile has been updated!')
-                login(request, user)
-                return redirect("account:userProfile")
-            else:
-                return render(request, "account/user/update_profile.html", {
-                    "error": "Passwords does not match!",
-                    'form': u_form
-                })
-    else:
-        u_form = UserUpdateForm(instance=request.user)
-    context = {'form': u_form}
-    return render(request, 'account/user/update_profile.html', context)
+    user_form = UserUpdateForm(instance=request.user)
+    return render(request, 'account/update_profile.html', {'form': user_form})

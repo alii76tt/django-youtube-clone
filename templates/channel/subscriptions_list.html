@@ -1,46 +1,67 @@
 {% extends 'base/base.html' %}
-{% block description %}Subscribtions List{% endblock description %}
-{% block keywords %}Subscribtions List{% endblock keywords %}
-{% block title %}Channels subscribed to {{channel.channel_name}}{% endblock title %}
+{% block description %}Subscribtions List · {% endblock description %}
+{% block keywords %}Subscribtions List · {% endblock keywords %}
+{% block title %}Channels subscribed to {{channel.channel_name}} · {% endblock title %}
 {% load static %}
 {% block content %}
-<div class="container px-4 py-5" id="custom-cards">
-    <h2 class="pb-2 border-bottom">SUBSCRIPTIONS</h2>
-    {% include 'base/message.html' %}
+<div class="container mt-3">
+  <div class="row">
     {% if request.user.is_authenticated %}
-    {% if channels %}
-    <div class="row">
-      {% for channel in channels %}
-      <div class="card m-3" style="max-width: 540px;">
-        <div class="row g-0">
-          <div class="col-md-4">
-            {% if channel.avatar %}
-                <img src="{{channel.avatar.url}}" class="img-fluid img-thumbnail mt-3 rounded-circle" alt="{{channel.channel_name}}" style="max-height: 12em;">
-            {% else %}
-              <img src="{% static 'images/channel/avatar/avatar.jpg' %}" class="img-fluid mt-3 rounded-circle" alt="...">
+      <div class="col-lg-3">
+        <h3 class="pb-4 mb-2 fst-italic border-bottom">
+          Subscribtions Channels
+        </h3>
+
+        <div class="list-group">
+            {% if channels %}
+              {% for channel in channels %}
+                <a href="{{channel.avatar.url}}" class="list-group-item d-flex justify-content-between align-items-center">{{channel.channel_name}}<span class="badge bg-primary rounded-pill">{{channel.total_subscribers}} subscribes</span></a>
+              {% endfor %}
             {% endif %}
-          </div>
-          <div class="col-md-8">
-            <div class="card-body">
-              <h5 class="card-title">{{channel.channel_name}}</h5>
-              <p class="card-text">{{channel.slogan}}</p>
-              <p class="card-text"><small class="text-muted">{{channel.total_subscribers}} subscribe</small></p>
-              <a href="{{channel.get_absolute_url}}" class="btn btn-warning stretched-link">Go Channel</a>
-            </div>
-          </div>
         </div>
       </div>
-      {% endfor %}
-    </div>
-    {% else %}
-    <div class="text-center mt-5">
-      <h2 class="pb-2">You are not subscribed to any channel.</h2>
-    </div>
-    {% endif %}
-    {% else %}
-    <div class="text-center mt-5">
-      <h2 class="pb-2">Sign in to see updates from your favorite YouTube channels</h2>
-    </div>
-    {% endif %}
+
+      <div class="col-lg-9 mt-3">
+        <div class="row row-cols- row-cols-lg-3 align-items-stretch">
+          {% if videos %}
+            {% for video in videos %}
+              <a href="{{video.get_absolute_url}}" class="h-25 p-1" style="text-decoration: none;">
+                <div class="col">
+                  <div class="card card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg" style="background-image: url('{{video.cover_image.url}}');">
+                    <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-2">
+                      <h5 class="pt-5 mt-5 mb-4 lh-1 fw-bold" style="text-shadow: 1px 1px #000000;">{{video.title}}</h5>
+                      <ul class="d-flex list-unstyled mt-auto">
+                        <li class="me-auto">
+                          {% if video.channel.avatar %}
+                            <img src="{{video.channel.avatar.url}}" alt="Bootstrap" width="40" height="40" class="rounded-circle border border-white">
+                          {% else %}
+                          <img src="https://github.com/twbs.png" alt="Bootstrap" width="40" height="40" class="rounded-circle border border-white">
+                          {% endif %}
+                        </li>
+                        <li class="d-flex align-items-center me-3">
+                          <svg class="bi me-2" width="1em" height="1em"><use xlink:href="#geo-fill"/></svg>
+                          <small style="text-shadow: 1px 1px #000000;">{{video.user.channel.channel_name}}</small>
+                        </li>
+                        <li class="d-flex align-items-center">
+                          <svg class="bi me-2" width="1em" height="1em"><use xlink:href="#calendar3"/></svg>
+                          <small style="text-shadow: 1px 1px #000000;">{{video.publishing_date|date:"M d, Y"}} ago</small>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            {% endfor %}
+          {% endif %}
+        </div>
+      </div>
+      {% else %}
+        <div class="text-center mt-5">
+          <div class="alert alert-success text-center" role="alert">
+            You are not subscribed to any channel. <a href="{% url 'channel:channelList' %}" class="alert-link">Explorer Channels <i class="fa-solid fa-compass"></i></a>
+          </div>
+        </div>
+      {% endif %}
+  </div>
 </div>
 {% endblock content %}

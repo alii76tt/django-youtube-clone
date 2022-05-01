@@ -5,21 +5,22 @@
       <nav class="navbar navbar-dark bg-dark">
         <div class="container-fluid">
           <a class="navbar-brand" href="{% url 'video:index' %}">
-            <img src="{% static 'images/logo.png' %}" alt="" width="100" height="30">
+            <img src="{% static 'images/logo.png' %}" alt="YotuTube Clone" width="120" height="30">
           </a>
         </div>
       </nav>
         <div class="dropdown nav col-12 col-lg-auto me-lg-auto ml-3 justify-content-center mb-md-0">
-          <a href="#" style="background-color: transparent;" class="d-flex align-items-center col-lg-4 mb-2 mb-lg-0 link-dark text-decoration-none dropdown-toggle list-group-item list-group-item-action text-light" id="dropdownNavLink" data-bs-toggle="dropdown" aria-expanded="false">
+          <a style="background-color: transparent;" class="d-flex align-items-center col-lg-4 mb-2 mb-lg-0 link-dark text-decoration-none dropdown-toggle list-group-item list-group-item-action text-light" id="dropdownNavLink" data-bs-toggle="dropdown" aria-expanded="false">
             Menu
           </a>
           <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownNavLink">
-            <li><a class="dropdown-item active" href="{% url 'video:index' %}" aria-current="page">Home</a></li>
-            <li><a class="dropdown-item" href="{% url 'channel:channelList' %}">All Channels</a></li>
+            <li><a class="dropdown-item" href="{% url 'video:index' %}" aria-current="page"><i class="fa-brands fa-youtube"></i> Home</a></li>
+            <li><a class="dropdown-item {% if 'channels' in request.path %}active{% endif %}" href="{% url 'channel:channelList' %}"><i class="fa-solid fa-border-all"></i> All Channels</a></li>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="{% url 'video:authorVideos' %}">Your Videos</a></li>
-            <li><a class="dropdown-item" href="{% url 'video:likeVideoList' %}">Your Favorite Videos</a></li>
-            <li><a class="dropdown-item" href="{% url 'channel:subscriptonsList' %}">Subscriptions</a></li>
+            <li><a class="dropdown-item {% if 'author' in request.path %}active{% endif %}" href="{% url 'video:authorVideos' %}"><i class="fa-solid fa-clapperboard"></i> Your Videos</a></li>
+            <li><a class="dropdown-item {% if 'library' in request.path %}active{% endif %}" href="{% url 'video:userLibrary' %}"><i class="fa-solid fa-photo-film"></i> Library</a></li>
+            <li><a class="dropdown-item {% if 'like' in request.path %}active{% endif %}" href="{% url 'video:likeVideoList' %}"><i class="fa-solid fa-heart"></i> Your Favorite Videos</a></li>
+            <li><a class="dropdown-item {% if 'subscriptons' in request.path %}active{% endif %}" href="{% url 'channel:subscriptonsList' %}"><i class="fa-solid fa-film"></i> Subscriptions</a></li>
           </ul>
         </div>
       
@@ -30,31 +31,31 @@
       <div class="dropdown text-end">
         {% if request.user.channel %}
         <a href="#" class="d-block link-dark text-decoration-none text-light dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-          <img src="{{request.user.channel.avatar.url}}" alt="mdo" width="50" height="50" class="rounded-circle">
+          <img src="{{request.user.channel.avatar.url}}" alt="{{request.user.username}}" width="50" height="50" class="rounded-circle">
         </a>
         {% else %}
         <a href="#" class="d-block link-dark text-decoration-none text-light dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-          <img src="{% static 'images/channel/avatar/avatar.png' %}" alt="mdo" width="50" height="50" class="rounded-circle">
+          <img src="{% static 'images/channel/avatar/avatar.png' %}" alt="{{request.user.username}}" width="50" height="50" class="rounded-circle">
         </a>
         {% endif %}
         <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1">
           <li><a class="dropdown-item" href="{% url 'account:userProfile' %}">{{request.user.get_full_name}}</a></li>
-          <li><a class="dropdown-item" href="{% url 'video:createVideo' %}">New Video</a></li>
-          <li><a class="dropdown-item" href="{% url 'account:updateUserProfile' %}">Settings</a></li>
-          <li><a class="dropdown-item" href="{% url 'account:userProfile' %}">Profile</a></li>
+          <li><a class="dropdown-item" href="{% url 'video:createVideo' %}"><i class="fa-solid fa-video"></i> New Video</a></li>
+          <li><a class="dropdown-item" href="{% url 'account:updateUserProfile' %}"><i class="fa-solid fa-gear"></i> Settings</a></li>
+          <li><a class="dropdown-item" href="{% url 'account:userProfile' %}"><i class="fa-solid fa-user"></i> Profile</a></li>
           {% if request.user.channel %}
-          <li><a class="dropdown-item" href="{% url 'channel:channelDetail' request.user.channel.id %}">Your Channel</a></li>
+          <li><a class="dropdown-item" href="{% url 'channel:channelDetail' request.user.channel.id %}"><i class="fa-solid fa-table-columns"></i> Your Channel</a></li>
           {% else %}
-          <li><a class="dropdown-item" href="{% url 'channel:createChannel' %}">Create Channel</a></li>
+          <li><a class="dropdown-item" href="{% url 'channel:createChannel' %}"><i class="fa-solid fa-square-plus"></i> Create Channel</a></li>
           {% endif %}
           <li><hr class="dropdown-divider"></li>
-          <li><a class="dropdown-item" href="{% url 'account:logout' %}">Sign out</a></li>
+          <li><a class="dropdown-item" href="{% url 'account:logout' %}"><i class="fa-solid fa-right-from-bracket"></i> Sign out</a></li>
         </ul>
       </div>
       {% else %}
       <div class="text-end">
-        <a href="{% url 'account:login' %}" class="btn btn-outline-light me-2">Login</a>
-        <a href="{% url 'account:register' %}" class="btn btn-warning">Sign-up</a>
+        <a href="{% url 'account:login' %}" class="btn btn-outline-light me-2"><i class="fa-solid fa-arrow-right-to-bracket"></i> Login</a>
+        <a href="{% url 'account:signUp' %}" class="btn btn-outline-warning"><i class="fa-solid fa-up-right-from-square"></i> Sign Up</a>
       </div>
       {% endif %}
     </div>

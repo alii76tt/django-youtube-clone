@@ -1,0 +1,36 @@
+{% extends "base/base.html" %}
+{% block description %}Create Library · {% endblock description %}
+{% block keywords %}Create Library · {% endblock keywords %}
+{% block title %}Create Library · {% endblock title %}
+{% block content %}
+<div class="container d-flex justify-content-center mt-5">
+    <div class="col-md-8 col-sm-12">
+        <h1 class="text-center display-4 fst-italic rounded">Create Library</h1>
+        <div class="">
+            <hr>
+            {% include 'base/message.html' %}
+            <form method="POST">
+                {% csrf_token %}
+                {% if form.errors %}
+                <div class="alert alert-danger">
+                    {{form.errors}}
+                </div>
+                {% endif %}
+                <div class="row mb-3">
+                    <div class="col">
+                        <label  class="form-label">{{form.title.label}}</label>
+                        {{form.title}}
+                    </div>
+                    <div class="col form-check form-switch">
+                        <label  class="form-label">Private</label>
+                        {{form.private}}
+                    </div>
+                </div>
+                <div class="mb-3 text-center">
+                    <input type="submit" value="Create Library" class="btn btn-primary">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

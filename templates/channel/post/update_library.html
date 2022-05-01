@@ -1,0 +1,39 @@
+{% extends "base/base.html" %}
+{% block description %}Update Library · {% endblock description %}
+{% block keywords %}Update Library · {% endblock keywords %}
+{% block title %}Update Library · {% endblock title %}
+{% block content %}
+<div class="container d-flex justify-content-center mt-5">
+    <div class="col-md-8 col-sm-12">
+        <h1 class="text-center display-4 fst-italic rounded">Update Library</h1>
+        <div class="">
+            <hr>
+            {% include 'base/message.html' %}
+            <form method="POST">
+                {% csrf_token %}
+                {% if form.errors %}
+                <div class="alert alert-danger">
+                    {{form.errors}}
+                </div>
+                {% endif %}
+                <div class="row mb-3">
+                    <div class="col">
+                        <label  class="form-label">{{form.title.label}}</label>
+                        {{form.title}}
+                    </div>
+                    <div class="col">
+                        {{form.videos}}
+                        <label class="form-check-label">{{form.videos.label}}</label>
+                    </div>
+                    <div class="col form-check form-switch">
+                        {{form.private}}
+                    </div>
+                </div>
+                <div class="mb-3 text-center">
+                    <input type="submit" value="Update Library" class="btn btn-primary">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

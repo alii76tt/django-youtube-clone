@@ -1,17 +1,17 @@
 {% extends 'base/base.html' %}
 {% load static %}
-{% block description %}{{channel.description|truncatechars:150}}{% endblock description %}
-{% block keywords %}{{channel.description|truncatechars:150}}{% endblock keywords %}
-{% block title %}{{channel.channel_name}}{% endblock title %}
+{% block description %}{{channel.description|truncatechars:150}} · {% endblock description %}
+{% block keywords %}{{channel.description|truncatechars:150}} · {% endblock keywords %}
+{% block title %}{{channel.channel_name}} · {% endblock title %}
 {% block content %}
 <div class="container mt-3">
   {% include 'base/message.html' %}
-    <div class="p-4 p-md-5 mb-4 text-white rounded" style="background-image: url('{% if channel.banner_image %}{{channel.banner_image.url}}{% else %} {% static '/images/channel/banner/sage.png' %} {% endif %}');">
+    <div class="p-4 p-md-5 mb-4 text-white rounded" style="background-image: url('{% if channel.banner_image %}{{channel.banner_image.url}}{% else %} {% static '/images/channel/banner/sage.png' %} {% endif %}'); background-size: contain;">
       <div class="d-flex justify-content-center">
         {% if channel.avatar %}
-          <img src="{{channel.avatar.url}}" alt="mdo" width="150" height="150" class="rounded-circle shadow-sm p-1 mb-1 bg-dark">
+          <img src="{{channel.avatar.url}}" alt="{{channel.channel_name}}" width="150" height="150" class="rounded-circle shadow-sm p-1 mb-1 bg-dark">
         {% else %}
-          <img src="{% static 'images/channel/avatar/avatar.jpg' %}" alt="mdo" width="150" height="150" class="rounded-circle shadow-sm p-1 mb-1 bg-dark">
+          <img src="{% static 'images/channel/avatar/avatar.jpg' %}" alt="{{channel.channel_name}}" width="150" height="150" class="rounded-circle shadow-sm p-1 mb-1 bg-dark">
         {% endif %}
       </div>  
       <div class="col-md-6 px-0 h-100 text-white text-shadow-1" style="text-shadow: 0 0.25rem 0.5rem rgb(0 0 0 / 25%);">
@@ -22,11 +22,11 @@
       </div>
       {% if user.is_authenticated %}
         {% if channel.user_id == request.user.id %}
-        <!-- Button trigger modal -->
         <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal">
           Delete
         </button>
         <a href="{{channel.get_update_url}}" role="buton" class="btn btn-block btn-info btn-sm">Update</a>
+        <a href="{% url 'video:createVideo' %}" role="buton" class="btn btn-block btn-warning btn-sm">New Video</a>
         {% endif %} 
       {% endif %}
       <div class="row g-3 align-items-center">
@@ -80,11 +80,20 @@
                           <h5 class="card-title">{{last_video.title}}</h5>
                           <p class="card-text">{{last_video.content|safe|linebreaks|truncatechars:100}}</p>
                           <p class="card-text"><small class="text-muted">{{last_video.publishing_date|date:"M d, Y"}}</small></p>
-                          <a href="{{last_video.get_absolute_url}}" class="btn btn-block btn-info btn-sm">See More</a>
+                          <a href="{{last_video.get_absolute_url}}" class="btn btn-block btn-info">See More</a>
+                          {% if user.is_authenticated %}
+                            {% if channel.user_id == request.user.id %}
+                          <a href="{{last_video.get_update_url}}" role="buton" class="btn btn-block btn-primary">Update</a>
+                            {% endif %}
+                          {% endif %}
                         </div>
                     </div>
                   {% else %}
-                    <h5 class="card-title">Video not found.</h5>
+                  <div class="text-center">
+                    <div class="alert alert-success text-center" role="alert">
+                      Video will be added soon...
+                    </div>
+                  </div>
                   {% endif %}
                 </div>
             </div>
@@ -120,27 +129,30 @@
                     </a>
                     {% endfor %}
                   {% else %}
-                    <h5 class="card-title">Videos not found.</h5>
+                  <div class="text-center">
+                    <div class="alert alert-success text-center" role="alert">
+                      Videos will be added soon...
+                    </div>
+                  </div>
                   {% endif %}
                 </div>
             </div>
             <div class="tab-pane fade" id="list-about" role="tabpanel" aria-labelledby="list-about-list">
                 <h1 class="display-4 fst-italic">{{channel.channel_name}} <span class="fs-5">Join Date ({{channel.join_date|date:"M d, Y"  }})</span></h1>
                 <p class="lead mb-0">{{channel.description|safe|linebreaks}}</p>
-                {% if request.user.is_authenticated %}
                 <p class="lead mb-0">Email: {{channel.user.email}}</p>
-                {% endif %}
             </div>
           </div>
         </div>
       </div>
 </div>
+
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Delete Channel</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -148,7 +160,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <a href="{{channel.get_delete_url}}" role="buton" class="btn btn-block btn-danger btn-sm">Delete</a>
+        <a href="{{channel.get_delete_url}}" role="buton" class="btn btn-block btn-danger">Delete</a>
       </div>
     </div>
   </div>

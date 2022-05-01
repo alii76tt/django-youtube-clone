@@ -111,11 +111,10 @@ def deleteChannel(request, id):
 
     return redirect('video:index')
 
-# subscriptions list
-
-
 def subscriptionsList(request):
+    videos = Video.objects.raw(f"SELECT * from video_video WHERE channel_id=(SELECT channel_id FROM channel_channel_subscribers WHERE user_id={request.user.id})")
     context = {
         'channels': Channel.objects.filter(subscribers=request.user.id),
+        'videos': videos
     }
     return render(request, 'channel/subscriptions_list.html', context)

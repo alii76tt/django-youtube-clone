@@ -1,0 +1,55 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block description %}({{request.user.username|upper}}) Library · {% endblock description %}
+{% block keywords %}({{request.user.username|upper}}) Library · {% endblock keywords %}
+{% block title %}({{request.user.username|upper}}) Library · {% endblock title %}
+{% block content %}
+<div class="container mt-3">
+{% include 'base/message.html' %}
+<div class="row g-5">
+    <div class="col-lg-12">
+      <h3 class="pb-4 mb-2 fst-italic border-bottom">
+        Enjoy your favorite videos 
+        {% if request.user.is_authenticated %}
+          <a href="{% url 'video:userLibraryCreate' %}" class="btn btn-sm btn-warning">Create List</a>
+        {% endif %}
+      </h3>
+      
+      <article class="blog-post">
+        {% if request.user.is_authenticated %}
+            {% if watchLaterVideos %}
+            <div class="row">
+              {% for item in watchLaterVideos %}
+                <div class="col-sm-6">
+                    <div class="card border-danger">
+                        <div class="card-header">{{item.channel.channel_name}} <i class="fa-solid fa-lock{% if item.private == "True" %}-open{% endif %}"></i></div>
+                        <div class="card-body">
+                          <h5 class="card-title">{{item.title}}</h5>
+                          <p class="card-text">{{item.totalVideos}} Videos · {{item.date|date:"M d, Y"}}</p>
+                        </div>
+                        <a href="{{item.get_absolute_url}}" class="btn  btn-sm btn-dark">Watch Videos</a>
+                        <a href="{{item.get_update_url}}" class="btn btn-sm btn-primary">Update List</a>
+                      </div>
+                </div>
+              {% endfor %}
+            </div>
+            {% else %}
+            <div class="text-center mt-5">
+              <div class="alert alert-success text-center" role="alert">
+                
+                Create a list to access the videos you like or save. <a href="{% url 'video:userLibraryCreate' %}" class="btn btn-sm btn-warning">Create New List</a>
+              </div>
+          </div>
+            {% endif %}
+        {% else %}
+            <div class="text-center mt-5">
+                <div class="alert alert-success text-center" role="alert">
+                    Sign in to access the videos you like or save. <a href="{% url 'account:login' %}" class="alert-link">Log in <i class="fa-solid fa-right-to-bracket"></i></a>
+                </div>
+            </div>
+        {% endif %}
+      </article>
+    </div>
+  </div>
+</div>
+{% endblock content %}

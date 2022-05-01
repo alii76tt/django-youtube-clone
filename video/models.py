@@ -16,10 +16,10 @@ class Video(models.Model):
     user = models.ForeignKey('auth.User', verbose_name='Author',
                              related_name='videos', on_delete=models.CASCADE)
     title = models.CharField(max_length=120, verbose_name="Video Title")
-    content = RichTextField(verbose_name="Video Description")
+    content = RichTextField(verbose_name="Video Content")
     cover_image = models.ImageField(null=True, upload_to='video/cover_image/')
-    video = models.FileField(upload_to='videos/')
-    status = models.CharField(default="True",choices=STATUS,max_length=6)
+    video = models.ImageField(upload_to='videos/')
+    status = models.CharField(default="True", choices=STATUS, max_length=6)
     slug = models.SlugField(unique=True, editable=False, max_length=200)
     publishing_date = models.DateTimeField(
         verbose_name="Publishing Date", auto_now_add=True)
@@ -89,3 +89,38 @@ class Comment(models.Model):
         if self.parent is None:
             return True
         return False
+    
+
+class WatchLater(models.Model):
+    STATUS = [
+        ('True', 'True'),
+        ('False', 'False'),
+    ]
+    title = models.CharField(
+        max_length=120, verbose_name="Title")
+    user = models.ForeignKey('auth.User', verbose_name='Author', on_delete=models.CASCADE)
+    channel = models.ForeignKey(
+        Channel, null=True, on_delete=models.CASCADE)
+    videos = models.ManyToManyField(
+        Video, related_name="watch_later_videos", blank=True)
+    private = models.CharField(default="False", choices=STATUS, max_length=6)
+    date = models.DateTimeField(
+        verbose_name="Date", auto_now_add=True)
+
+    def __str__(self):
+        return self.title
+
+    def get_absolute_url(self):
+        return reverse("video:userLibraryVideos", kwargs={'id': self.id})
+    
+    def get_update_url(self):
+        return reverse('video:userLibraryUpdate', kwargs={'id': self.id})
+
+    def get_delete_url(self):
+        return reverse('video:userLibraryDelete', kwargs={'id': self.id})
+
+    def totalVideos(self):
+        return self.videos.count()
+
+    class Meta:
+        ordering = ['-date', 'id']

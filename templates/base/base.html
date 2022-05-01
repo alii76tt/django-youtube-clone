@@ -20,11 +20,10 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" rel="stylesheet">
 
     <link rel="shortcut icon" href="https://www.youtube.com/s/desktop/01f7cad5/img/favicon.ico" type="image/x-icon">
-    <title>{% block title %}{% endblock title %} - YouTube Clone</title>
+    <title>{% block title %}{% endblock title %}YouTube Clone</title>
     <style>
       body{
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-	      background: #dee1e3;
       }
       .bd-placeholder-img {
         font-size: 1.125rem;
@@ -41,7 +40,7 @@
       }
     </style>
   </head>
-  <body>
+  <body class="font-monospace">
     {% include 'base/navbar.html' %}
     {% block content %}
     {% endblock content %}

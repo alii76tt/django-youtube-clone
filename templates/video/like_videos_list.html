@@ -1,52 +1,55 @@
 {% extends 'base/base.html' %}
 {% load static %}
-{% block description %}{{channel.slogan}}{% endblock description %}
-{% block keywords %}{{channel.slogan}}{% endblock keywords %}
-{% block title %}Videos liked by {{channel.channel_name}}{% endblock title %}
+{% block description %}{{channel.slogan}} · {% endblock description %}
+{% block keywords %}{{channel.slogan}} · {% endblock keywords %}
+{% block title %}Videos liked by {{channel.channel_name}} · {% endblock title %}
 {% block content %}
-<div class="container px-4 py-5" id="custom-cards">
-    <h2 class="pb-2 border-bottom">YOUR FAVORITE VIDEOS</h2>
+<div class="container">
     {% include 'base/message.html' %}
     {% if request.user.is_authenticated %}
-    {% if videos %}
-    <div class="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-5">
-      {% for video in videos %}
-      <a href="{{video.get_absolute_url}}" style="text-decoration: none;">
-        <div class="col">
-          <div class="card card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg" style="background-image: url('{{video.cover_image.url}}');">
-            <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
-              <h2 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">{{video.title}}</h2>
-              <ul class="d-flex list-unstyled mt-auto">
-                <li class="me-auto">
-                  {% if video.channel.avatar %}
-                  <img src="{{video.channel.avatar.url}}" alt="Bootstrap" width="40" height="40" class="rounded-circle border border-white">
-                  {% else %}
-                  <img src="https://github.com/twbs.png" alt="Bootstrap" width="40" height="40" class="rounded-circle border border-white">
-                  {% endif %}
-                </li>
-                <li class="d-flex align-items-center me-3">
-                  <svg class="bi me-2" width="1em" height="1em"><use xlink:href="#geo-fill"/></svg>
-                  <small>{{video.user.get_full_name}}</small>
-                </li>
-                <li class="d-flex align-items-center">
-                  <svg class="bi me-2" width="1em" height="1em"><use xlink:href="#calendar3"/></svg>
-                  <small>{{video.publishing_date|timesince}} ago</small>
-                </li>
-              </ul>
+      {% if videos %}
+      <div class="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-5">
+        {% for video in videos %}
+        <a href="{{video.get_absolute_url}}" style="text-decoration: none;">
+          <div class="col">
+            <div class="card card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg" style="background-image: url('{{video.cover_image.url}}');">
+              <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
+                <h2 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">{{video.title}}</h2>
+                <ul class="d-flex list-unstyled mt-auto">
+                  <li class="me-auto">
+                    {% if video.channel.avatar %}
+                    <img src="{{video.channel.avatar.url}}" alt="Bootstrap" width="40" height="40" class="rounded-circle border border-white">
+                    {% else %}
+                    <img src="https://github.com/twbs.png" alt="Bootstrap" width="40" height="40" class="rounded-circle border border-white">
+                    {% endif %}
+                  </li>
+                  <li class="d-flex align-items-center me-3">
+                    <svg class="bi me-2" width="1em" height="1em"><use xlink:href="#geo-fill"/></svg>
+                    <small>{{video.user.get_full_name}}</small>
+                  </li>
+                  <li class="d-flex align-items-center">
+                    <svg class="bi me-2" width="1em" height="1em"><use xlink:href="#calendar3"/></svg>
+                    <small>{{video.publishing_date|timesince}} ago</small>
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
+        </a>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="text-center mt-5">
+        <div class="alert alert-success text-center" role="alert">
+          Videos Not Found. <a href="{% url 'video:index' %}" class="alert-link">Explorer Videos <i class="fa-solid fa-compass"></i></a>
         </div>
-      </a>
-      {% endfor %}
-    </div>
+      </div>
+      {% endif %}
     {% else %}
     <div class="text-center mt-5">
-      <h2 class="pb-2">Videos not found.</h2>
-    </div>
-    {% endif %}
-    {% else %}
-    <div class="text-center mt-5">
-      <h2 class="pb-2">Sign in to see updates from your favorite YouTube videos</h2>
+      <div class="alert alert-success text-center" role="alert">
+        Sign in to see updates from your YouTube videos <a href="{% url 'account:login' %}" class="alert-link">Log in <i class="fa-solid fa-right-to-bracket"></i></a>
+      </div>
     </div>
     {% endif %}
 </div>

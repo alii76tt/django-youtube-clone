@@ -1,39 +1,40 @@
 {% load static %}
-<div class="container px-4 py-5" id="custom-cards">
-    <h2 class="pb-2 border-bottom">HOME</h2>
+<div class="container mt-5">
     {% include 'base/message.html' %}
-    {% if videos %}
-    <div class="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-5">
-      {% for video in videos %}
-      <a href="{{video.get_absolute_url}}" class="h-25" style="text-decoration: none;">
-        <div class="col">
-          <div class="card card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg" style="background-image: url('{{video.cover_image.url}}');">
-            <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-2">
-              <h5 class="pt-5 mt-5 mb-4 lh-1 fw-bold" style="text-shadow: 1px 1px #000000;">{{video.title}}</h5>
-              <ul class="d-flex list-unstyled mt-auto">
-                <li class="me-auto">
-                  {% if video.channel.avatar %}
-                    <img src="{{video.channel.avatar.url}}" alt="Bootstrap" width="40" height="40" class="rounded-circle border border-white">
-                  {% else %}
-                  <img src="https://github.com/twbs.png" alt="Bootstrap" width="40" height="40" class="rounded-circle border border-white">
-                  {% endif %}
-                </li>
-                <li class="d-flex align-items-center me-3">
-                  <svg class="bi me-2" width="1em" height="1em"><use xlink:href="#geo-fill"/></svg>
-                  <small style="text-shadow: 1px 1px #000000;">{{video.user.channel.channel_name|upper}}</small>
-                </li>
-                <li class="d-flex align-items-center">
-                  <svg class="bi me-2" width="1em" height="1em"><use xlink:href="#calendar3"/></svg>
-                  <small style="text-shadow: 1px 1px #000000;">{{video.publishing_date|timesince}} ago</small>
-                </li>
-              </ul>
+      {% if videos %}
+      <div class="row row-cols- row-cols-lg-3 align-items-stretch">
+        {% for video in videos %}
+        <a href="{{video.get_absolute_url}}" class="h-25 p-1" style="text-decoration: none;">
+          <div class="col">
+            <div class="card card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg" style="background-image: url('{{video.cover_image.url}}');">
+              <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-2">
+                <h5 class="pt-5 mt-5 mb-4 lh-1 fw-bold" style="text-shadow: 1px 1px #000000;">{{video.title}}</h5>
+                <ul class="d-flex list-unstyled mt-auto">
+                  <li class="me-auto">
+                    {% if video.channel.avatar %}
+                      <img src="{{video.channel.avatar.url}}" alt="Bootstrap" width="40" height="40" class="rounded-circle border border-white">
+                    {% else %}
+                    <img src="https://github.com/twbs.png" alt="Bootstrap" width="40" height="40" class="rounded-circle border border-white">
+                    {% endif %}
+                  </li>
+                  <li class="d-flex align-items-center me-3">
+                    <svg class="bi me-2" width="1em" height="1em"><use xlink:href="#geo-fill"/></svg>
+                    <small style="text-shadow: 1px 1px #000000;">{{video.user.channel.channel_name}}</small>
+                  </li>
+                  <li class="d-flex align-items-center">
+                    <svg class="bi me-2" width="1em" height="1em"><use xlink:href="#calendar3"/></svg>
+                    <small style="text-shadow: 1px 1px #000000;">{{video.publishing_date|date:"M d, Y"}} ago</small>
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
-        </div>
-      </a>
-      {% endfor %}
+        </a>
+        {% endfor %}
+        
+      </div>
       <!--Pagination-->
-      <div class="pagination mt-3">
+      <div class="pagination mt-5">
         <span class="step-links">
             {% if videos.has_previous %}
                 <a href="?page={{ videos.previous_page_number }}{% if request.GET.q %}&q={{request.GET.q}}{% endif %}">previous</a>
@@ -45,12 +46,13 @@
                 <a href="?page={{ videos.next_page_number }}{% if request.GET.q %}&q={{request.GET.q}}{% endif %}">next</a>
             {% endif %}
         </span>
-    </div>
-    <!--end of Pagination-->
-    </div>
-    {% else %}
-      <div class="text-center mt-5">
-        <h2 class="pb-2">Videos not found.</h2>
       </div>
-    {% endif %}
+    <!--end of Pagination-->
+      {% else %}
+        <div class="text-center mt-5">
+          <div class="alert alert-success text-center" role="alert">
+            Videos will be added soon...
+          </div>
+        </div>
+      {% endif %}
 </div>

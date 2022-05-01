@@ -1,40 +1,37 @@
 {% extends 'base/base.html' %}
 {% load static %}
-{% block description %}All Channel List{% endblock description %}
-{% block keywords %}All Channel List{% endblock keywords %}
-{% block title %}All Channel List{% endblock title %}
+{% block description %}All Channel List · {% endblock description %}
+{% block keywords %}All Channel List · {% endblock keywords %}
+{% block title %}All Channel List · {% endblock title %}
 {% block content %}
-<div class="container px-4 py-5" id="custom-cards">
-    <h2 class="pb-2 border-bottom">ALL CHANNEL</h2>
-    {% include 'base/message.html' %}
-      {% if channels %}
-      <div class="row">
-        {% for channel in channels %}
-        <div class="card m-3" style="max-width: 540px;">
-          <div class="row g-0">
-            <div class="col-md-4">
-              {% if channel.avatar %}
-                <img src="{{channel.avatar.url}}" class="img-fluid img-thumbnail mt-3 rounded-circle" alt="{{channel.channel_name}}" style="max-height: 12em;">
-              {% else %}
-                <img src="{% static 'images/channel/avatar/avatar.jpg' %}" class="img-fluid mt-3 rounded-circle" alt="...">
-              {% endif %}
-            </div>
-            <div class="col-md-8">
-              <div class="card-body">
-                <h5 class="card-title">{{channel.channel_name}}</h5>
-                <p class="card-text">{{channel.slogan}}</p>
-                <p class="card-text"><small class="text-muted">{{channel.total_subscribers}} subscribe</small></p>
-                <a href="{{channel.get_absolute_url}}" class="btn btn-sm stretched-link text-light" style="background-color:#6610f2">Go Channel</a>
-              </div>
-            </div>
-          </div>
+<div class="container mt-3">
+  {% if channels %}
+  <div class="row row-cols-1 row-cols-md-3 g-4">
+  {% include 'base/message.html' %}
+    {% for channel in channels %}
+    <div class="col">
+      <div class="card">
+        <img src="{{channel.avatar.url}}" class="card-img-top img-responsive" alt="{{channel.channel_name}}">
+        <div class="card-body text-center">
+          <h5 class="card-title">{{channel.channel_name}} ({{channel.total_subscribers}} subscribers)</h5>
+          <p class="card-text">{{channel.description|safe}}</p>
+          <a href="{{channel.get_absolute_url}}" class="btn btn-sm stretched-link text-light" style="background-color:#6610f2">Go Channel</a>
         </div>
-        {% endfor %}
+        <div class="card-footer">
+          <small class="text-muted">{{channel.slogan}}</small>
+        </div>
       </div>
-      {% else %}
+    </div>
+    {% endfor %}
+  </div>
+    {% else %}
       <div class="text-center mt-5">
-        <h2 class="pb-2">Channels not found.</h2>
+        <div class="alert alert-success text-center" role="alert">
+          Channels will be added soon...
+        </div>
       </div>
-      {% endif %}
+    {% endif %}
 </div>
+
+
 {% endblock content %}

@@ -1,8 +1,8 @@
 {% extends 'base/base.html' %}
 {% load static %}
-{% block description %}{{video.content|truncatechars:150}}{% endblock description %}
-{% block keywords %}{{video.content|truncatechars:150}}{% endblock keywords %}
-{% block title %}{{video.title}}{% endblock title %}
+{% block description %}{{video.content|truncatechars:150}} · {% endblock description %}
+{% block keywords %}{{video.content|truncatechars:150}} · {% endblock keywords %}
+{% block title %}{{video.title}} · {% endblock title %}
 {% block content %}
 <link rel="stylesheet" href="{% static '/css/comment.css' %}">
 <div class="container mt-3">
@@ -11,7 +11,6 @@
         <div class="col-lg-9">
           {% if user.is_authenticated %}
             {% if channel.user_id == request.user.id %}
-            <!-- Button trigger modal -->
             <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal">
               Delete
             </button>
@@ -24,12 +23,12 @@
                     <source src="{{video.video.url}}" type="video/mp4" />
                 </video>
             </div>
-            <div class="container-fluid mt-3">
+            <div class="container-fluid mt-1">
                 <h4>{{video.title}}</h4>
                 <div class="row">
                     <div class="col d-flex justify-content-between">
                         <p>{{video.publishing_date|date:"M d, Y"}}</p>
-                        <form action="{% url 'video:likeVideo' video.pk %}" method="post">
+                        <form action="{% url 'video:likeVideo' video.pk %}" method="POST">
                           {% csrf_token %}
                           {% if user.is_authenticated %}
                             {% if liked %}
@@ -37,10 +36,13 @@
                             {% else %}
                               <button type="submit" name="video_id" value="{{video.id}}" class="btn btn-success"><i class="fa-solid fa-thumbs-up"></i> {{likes_total}}</button>
                             {% endif %}
+                            <a href="{% url 'video:createVideo' %}" role="buton" class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal1"><i class="fa-solid fa-folder-plus"></i> Watch Later</a>
                           {% else %}
-                          <a href="{% url 'account:login' %}" class="btn btn-success btn-sm" style="width:150px">Login to Like</a> 
+                          <a href="{% url 'account:login' %}" class="btn btn-success btn-lg"><i class="fa-solid fa-thumbs-up"></i></a>
+                          <a href="{% url 'account:login' %}" class="btn btn-secondary btn-lg"><i class="fa-solid fa-folder-plus"></i> Watch Later</a>
                           {% endif %}
                         </form>
+                        
                         <!-- AddToAny BEGIN -->
                         <div class="a2a_kit a2a_kit_size_32 a2a_default_style">
                           <a class="a2a_dd" href="https://www.addtoany.com/share"></a>
@@ -62,9 +64,11 @@
                         <div class="list-group">
                             <div class="list-group-item list-group-item d-flex gap-3 py-3">
                               {% if channel.avatar %}
-                                <img src="{{channel.avatar.url}}" alt="twbs" width="50" height="50" class="rounded-circle flex-shrink-0">
+                              <a href="{{channel.get_absolute_url}}">
+                                <img src="{{channel.avatar.url}}" alt="twbs" width="50" height="50" class="rounded-circle "></a>
                               {% else %}
-                                <img src="{% static 'images/channel/avatar/avatar.jpg' %}" alt="twbs" width="50" height="50" class="rounded-circle flex-shrink-0">
+                              <a href="{{channel.get_absolute_url}}">
+                                <img src="{% static 'images/channel/avatar/avatar.jpg' %}" alt="twbs" width="50" height="50" class="rounded-circle"></a>
                               {% endif %}
                               <div class="d-flex gap-2 w-100 justify-content-between">
                                 <div>
@@ -82,16 +86,17 @@
                                         <button type="submit" name="video_subscribe_id" value="{{channel.id}}" class="btn btn-danger">Subscribe</button>
                                       {% endif %}
                                     {% else %}
-                                    <a href="{% url 'account:login' %}" class="btn btn-danger btn-sm" style="width:150px">Login to Subscribe</a>
+                                    <a href="{% url 'account:login' %}" class="btn btn-danger">Subscribe</a>
                                     {% endif %}
                                   </form>
                                 {% endif %}
                               </div>
                             </div>
                         </div>
-                        <p class="text-start ">{{video.content|safe}}</p>
+                        <p class="text-start">{{video.content|safe}}</p>
                     </div>
                 </div>
+              </div>
                 <hr>
 
                 <div class="row mb-5">
@@ -105,13 +110,13 @@
                           <button type="submit" class="btn btn-warning btn-sm mb-3">Add Comment</button>
                       </form>
                       {% else %}
-                        <a href="{% url 'account:login' %}" class="btn btn-warning btn-sm">Login to add comment</a> 
+                        <a href="{% url 'account:login' %}" class="btn btn-warning mb-3">Add Comment</a> 
                       {% endif %}  
                        <!-- Contenedor Principal -->
                       <div class="comments-container ovelseSeksjon">
                         <h1>({{video.comments.count}}) Comment</h1>
                         {% for comment in comments %}
-                        <ul id="comments-list" class="comments-list"">
+                        <ul id="comments-list" class="comments-list">
                           <li>
                             <div class="comment-main-level">
                               <!-- Avatar -->
@@ -138,9 +143,7 @@
                                 <div class="comment-main-level">
                                   <!-- Avatar -->
                                   {% if reply.channel.avatar %}
-                                  <div class="comment-avatar"><img src="{{reply.channel.avatar.url}}" alt=""></div>
-                                  {% else %}
-                                  <div class="comment-avatar"><img src="{% static 'images/channel/avatar/avatar.jpg' %}" alt=""></div>
+                                  <div class="comment-avatar"><img src="{{reply.channel.avatar.url}}"></div>
                                   {% endif %}
                                   <!-- Contenedor del Comentario -->
                                   <div class="comment-box">
@@ -175,46 +178,46 @@
                     </div>
                 </div>
             </div>
-        </div>
-
-        <div class="col-lg-3">
-            {% for item in videos %}
-            <a href="{{item.get_absolute_url}}" class="m-1 h-25" style="text-decoration: none;">
-                <div class="col">
-                  <div class="card card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg" style="background-image: url('{{item.cover_image.url}}');">
-                    <div class="d-flex flex-column h-50 p-5 pb-3 text-white text-shadow-1">
-                      <h2 class="pt-5 mt-5 mb-4 fs-4 lh-1 fw-bold">{{item.title}}</h2>
-                      <ul class="d-flex list-unstyled mt-auto">
-                        <li class="me-auto">
-                          {% if item.channel.avatar %}
-                          <img src="{{item.channel.avatar.url}}" alt="Bootstrap" width="40" height="40" class="rounded-circle border border-white">
-                          {% else %}
-                          <img src="https://github.com/twbs.png" alt="Bootstrap" width="40" height="40" class="rounded-circle border border-white">
-                          {% endif %}
-                        </li>
-                        <li class="d-flex align-items-center me-3">
-                          <svg class="bi me-2" width="1em" height="1em"><use xlink:href="#geo-fill"/></svg>
-                          <small>{{item.user.channel.channel_name|upper}}</small>
-                        </li>
-                        <li class="d-flex align-items-center">
-                          <svg class="bi me-2" width="1em" height="1em"><use xlink:href="#calendar3"/></svg>
-                          <small>{{item.publishing_date|timesince}} ago</small>
-                        </li>
-                      </ul>
+            <div class="col-lg-3">
+              {% for item in videos %}
+              <a href="{{item.get_absolute_url}}" class="m-1 h-25" style="text-decoration: none;">
+                  <div class="col">
+                    <div class="card card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg" style="background-image: url('{{item.cover_image.url}}');">
+                      <div class="d-flex flex-column h-50 p-5 pb-3 text-white text-shadow-1">
+                        <h2 class="pt-5 mt-5 mb-4 fs-4 lh-1 fw-bold">{{item.title}}</h2>
+                        <ul class="d-flex list-unstyled mt-auto">
+                          <li class="me-auto">
+                            {% if item.channel.avatar %}
+                            <img src="{{item.channel.avatar.url}}" alt="Bootstrap" width="40" height="40" class="rounded-circle border border-white">
+                            {% else %}
+                            <img src="{% static '/images/channel/banner/sage.png' %}" alt="Bootstrap" width="40" height="40" class="rounded-circle border border-white">
+                            {% endif %}
+                          </li>
+                          <li class="d-flex align-items-center me-3">
+                            <svg class="bi me-2" width="1em" height="1em"><use xlink:href="#geo-fill"/></svg>
+                            <small>{{item.user.channel.channel_name|upper}}</small>
+                          </li>
+                          <li class="d-flex align-items-center">
+                            <svg class="bi me-2" width="1em" height="1em"><use xlink:href="#calendar3"/></svg>
+                            <small>{{item.publishing_date|timesince}} ago</small>
+                          </li>
+                        </ul>
+                      </div>
                     </div>
                   </div>
-                </div>
-            </a>
-            {% endfor %}
+              </a>
+              {% endfor %}
+          </div>
         </div>
     </div>
 </div>
-<!-- Modal -->
+
+<!-- Video -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Delete Video</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -223,6 +226,39 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         <a href="{{video.get_delete_url}}" role="buton" class="btn btn-block btn-danger btn-sm">Delete</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Watch Later -->
+<div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel1">Library List</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="list-group">
+          {% if watchLaterList %}
+          {% for list in watchLaterList %}
+            <form action="{% url 'video:addLibraryVideo' list.id video.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="list-group-item list-group-item-action list-group-item-primary">{{list.title}} Add List <i class="fa-solid fa-notes-medical"></i></button>
+            </form>
+            {% endfor %}
+          {% else %}
+          <div class="text-center mt-5">
+            <div class="alert alert-success text-center" role="alert">
+              List Not Found. <a href="{% url 'video:userLibraryCreate' %}" class="alert-link">Create new list <i class="fa-solid fa-plus"></i></a>
+            </div>
+        </div>
+          {% endif %}
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
   </div>

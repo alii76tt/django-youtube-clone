@@ -1,23 +1,51 @@
 {% extends "base/base.html" %}
-{% block description %}Create Channel{% endblock description %}
-{% block keywords %}Create Channel{% endblock keywords %}
-{% block title %}Create Channel{% endblock title %}
+{% block description %}Create Channel · {% endblock description %}
+{% block keywords %}Create Channel · {% endblock keywords %}
+{% block title %}Create Channel · {% endblock title %}
 {% block content %}
-<div class="container mt-3">
-   <div class="col">
-        <h1>CREATE CHANNEL</h1>
-        <hr>
-        {% include 'base/message.html' %}
-        <form method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-            <div class="mb-3">
-                {{channelForm.media}}
-                {{channelForm.as_p}}
-            </div>
-            <div class="mb-3 text-center">
-                <input type="submit" value="Create Channel" class="btn btn-warning">
-            </div>
-        </form>
+<div class="container d-flex justify-content-center mt-5">
+    <div class="col-md-8 col-sm-12">
+        <h1 class="text-center display-4 fst-italic rounded">Create Channel</h1>
+        <div class="container">
+            <hr>
+            {% include 'base/message.html' %}
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                {% if error %}
+                <div class="alert alert-danger">
+                    {{error}}
+                </div>
+                {% endif %}
+                <div class="row mb-3">
+                    <div class="col">
+                        <label  class="form-label">{{channelForm.channel_name.label}}</label>
+                        {{channelForm.channel_name}}
+                    </div>
+                    <div class="col">
+                        <label class="form-label">{{channelForm.slogan.label}}</label>
+                        {{channelForm.slogan}}
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Channel Description</label>
+                    {{channelForm.media}}
+                    {{channelForm.description}}
+                </div>
+                <div class="row mb-3">
+                    <div class="col">
+                        <label  class="form-label">{{channelForm.avatar.label}}</label>
+                        {{channelForm.avatar}}
+                    </div>
+                    <div class="col">
+                        <label class="form-label">{{channelForm.banner_image.label}}</label>
+                        {{channelForm.banner_image}}
+                    </div>
+                </div>
+                <div class="mb-3 text-center">
+                    <input type="submit" value="Create Channel" class="btn btn-warning">
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 {% endblock %}

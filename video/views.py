@@ -1,7 +1,7 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib import messages
-from video.forms import CommentForm, VideoForm
+from video.forms import CommentForm, VideoForm, WatchLaterForm
 from .models import *
 from channel.models import Channel
 from django.contrib.auth.decorators import login_required
@@ -65,6 +65,8 @@ def videoDetail(request, slug):
     video = get_object_or_404(Video, slug=slug)
     channel = Channel.objects.get(channel=video.id)
     comments = Comment.objects.filter(video=video, parent=None)
+    watchLaterList = WatchLater.objects.filter(user=request.user.id)
+    
     try:
         channel_id = Channel.objects.get(user_id=request.user.id)
     except:
@@ -105,6 +107,7 @@ def videoDetail(request, slug):
         'videos': Video.objects.filter(status="True")[:5],
         'video': video,
         'comments': comments,
+        'watchLaterList': watchLaterList,
         'channel': channel,
         'form': form,
         'liked': liked,
@@ -196,3 +199,99 @@ def authorVideos(request):
         'videos': Video.objects.filter(status="True", user_id=request.user.id),
     }
     return render(request, 'video/author_videos.html', context)
+
+#library
+def userLibrary(request):
+    watchLaterVideos = WatchLater.objects.filter(user=request.user.id)
+    context = {
+        'watchLaterVideos': watchLaterVideos,
+    }
+    return render(request, 'channel/library.html', context)
+
+def userLibraryVideos(request, id):
+    videos = Video.objects.raw(f"SELECT * FROM video_video WHERE id=(SELECT video_id FROM video_watchlater_videos WHERE id={id})")
+    context = {
+        'library': WatchLater.objects.get(id=id),
+        'videos': videos,
+    }
+    return render(request, 'channel/libraryVideos.html', context)
+
+@login_required
+def userLibraryCreate(request):
+    watchLaterForm = WatchLaterForm(request.POST or None)
+    if request.method == "POST":
+        if watchLaterForm.is_valid():
+            watchLaterForm.instance.user_id = request.user.id
+            watchLaterForm.instance.channel_id = request.user.channel.id
+            watchLaterForm.save()
+            messages.success(
+                request, 'Your list has been successfully created.')
+            return redirect('video:userLibrary')
+        else:
+            return render(request, 'channel/post/create_library.html', {'form': watchLaterForm})
+    context = {
+        'form': watchLaterForm,
+    }
+    return render(request, 'channel/post/create_library.html', context)
+
+@login_required
+def userLibraryUpdate(request, id):
+    watchLater = WatchLater.objects.get(id=id)
+    watchLaterForm = WatchLaterForm(request.POST or None, instance=watchLater)
+    if request.method == "POST":
+        if watchLaterForm.is_valid():
+            watchLaterForm.instance.user_id = request.user.id
+            watchLaterForm.instance.channel_id = request.user.channel.id
+            watchLaterForm.save()
+            messages.success(
+                request, 'Your list has been successfully updated.')
+            return redirect('video:userLibrary')
+        else:
+            return render(request, 'channel/post/update_library.html', {'form': watchLaterForm})
+    context = {
+        'form': watchLaterForm,
+    }
+    return render(request, 'channel/post/update_library.html', context)
+
+@login_required
+def userLibraryDelete(request, id):
+    watchLater = WatchLater.objects.get(id=id)
+    try:
+        watchLater.delete()
+        messages.success(request, "Your List has been successfully deleted.")
+    except:
+        messages.error(request, "Your List could not be deleted!")
+
+    return redirect('video:userLibrary')
+
+def addLibraryVideo(request, id, video_id):
+    url = request.META.get('HTTP_REFERER')
+    video = Video.objects.get(id=video_id)
+    later = WatchLater.objects.get(id=id)
+    
+    if request.method == "POST":
+        try:
+            later.videos.add(video)
+            messages.success(
+                request, f'{video.title} video has been added to {later.title} list!')
+            return  HttpResponseRedirect(later.get_absolute_url())
+        except:
+            messages.error(request, f'{video.title} video could not be added to {later.title} list!')
+            return HttpResponseRedirect(video.get_absolute_url())
+    return HttpResponseRedirect(url)
+
+def removeLibraryVideo(request, id, video_id):
+    url = request.META.get('HTTP_REFERER')
+    video = Video.objects.get(id=video_id)
+    later = WatchLater.objects.get(id=id)
+    
+    if request.method == "POST":
+        try:
+            later.videos.remove(video)
+            messages.success(
+                request, f'{video.title} video has been removed to {later.title} list!')
+            return  HttpResponseRedirect(later.get_absolute_url())
+        except:
+            messages.error(request, f'{video.title} video could not be removed to {later.title} list!')
+            return HttpResponseRedirect(video.get_absolute_url())
+    return HttpResponseRedirect(url)

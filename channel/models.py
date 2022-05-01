@@ -1,8 +1,10 @@
+from email.policy import default
 from django.db import models
 from django.contrib.auth.models import User
 from ckeditor.fields import RichTextField
 from django.urls import reverse
 from django.utils.safestring import mark_safe
+
 
 class Channel(models.Model):
     channel_name = models.CharField(
@@ -10,11 +12,10 @@ class Channel(models.Model):
     slogan = models.CharField(max_length=100, verbose_name="Channel Slogan")
     subscribers = models.ManyToManyField(
         User, related_name="video_subscribers", blank=True)
-    user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
-    description = RichTextField(verbose_name="Description")
-    avatar = models.ImageField(null=True, upload_to='channel/avatar/')
-    banner_image = models.ImageField(
-        null=True, upload_to='channel/banner_image/')
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    description = RichTextField(verbose_name="Description", blank=True)
+    avatar = models.ImageField(upload_to='channel/avatar/', default="images/channel/avatar/avatar.png")
+    banner_image = models.ImageField(upload_to='channel/banner_image/', default="images/channel/avatar/avatar.png")
     join_date = models.DateTimeField(
         verbose_name="Join Date", auto_now_add=True)
     
