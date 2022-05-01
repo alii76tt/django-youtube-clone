@@ -1,17 +1,22 @@
 <h1 align='center'>YouTube Clone In Django</h1>
 <p align='center'>Basic YouTube clone website built in django web framework using Python.</p>
 
+## Live Demo
+<p align='center'><a target="_blank" href="https://youtubeclonee.pythonanywhere.com"><img alt="Website"src="https://www.pythonanywhere.com/static/anywhere/images/PA-logo.svg" style="width: 18em;"></a></p>
+
 <p align="center">
     <a href="https://alii76ttytclone.pythonanywhere.com/">
-        <img src="https://www.pythonanywhere.com/static/anywhere/images/PA-logo.svg" style="width: 15em;"
+        <img src="./images/1.gif"
             alt="Update Github Stats" title="django-yt-clone">
     </a>
 </p>
 
-<p align='center'>
-    <img align="center" src="./images/home.jpg" style="max-width:35em">
-</p>
+## Properties
 
+```
+Create User, Video, Comment-Reply, Channel, Watch Later List
+Share Video and Channel
+```
 
 ## Requirements
 You can install the Requirements by running the command:
@@ -37,13 +42,19 @@ tzdata==2021.5
 ```sh
 $ git clone https://github.com/alii76tt/django-youtube-clone
 $ cd django-youtube-clone
+$ python -m venv venv
+if you are using windows:
+$.\venv\Scripts\activate
+if you are using linux
+$source venv/bin/activate
 $ pip install -r requirements.txt
-$ python manage.py createsuperuser
 $ python manage.py runserver
 ```
 
 ## Screenshots
 <p align='center'>
-    <img align="center" src="./images/home.jpg" style="margin-bottom: 15px">
-    <img align="center" src="./images/video.jpg">
+     <img align="center" src="./images/video.png">
+    <img align="center" src="./images/profile.png">
+    <img align="center" src="./images/channel.png">
+    <img align="center" src="./images/home.png">    
 </p>
