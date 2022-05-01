@@ -18,7 +18,7 @@ class Video(models.Model):
     title = models.CharField(max_length=120, verbose_name="Video Title")
     content = RichTextField(verbose_name="Video Content")
     cover_image = models.ImageField(null=True, upload_to='video/cover_image/')
-    video = models.ImageField(upload_to='videos/')
+    video = models.FileField(upload_to='videos/')
     status = models.CharField(default="True", choices=STATUS, max_length=6)
     slug = models.SlugField(unique=True, editable=False, max_length=200)
     publishing_date = models.DateTimeField(
