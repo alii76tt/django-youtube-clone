@@ -5,7 +5,7 @@
 <p align='center'><a target="_blank" href="https://youtubeclonee.pythonanywhere.com"><img alt="Website"src="https://www.pythonanywhere.com/static/anywhere/images/PA-logo.svg" style="width: 18em;"></a></p>
 
 <p align="center">
-    <a href="https://alii76ttytclone.pythonanywhere.com/">
+    <a href="https://youtubeclonee.pythonanywhere.com">
         <img src="./images/1.gif"
             alt="Update Github Stats" title="django-yt-clone">
     </a>
