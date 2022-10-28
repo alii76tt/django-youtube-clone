@@ -93,7 +93,7 @@
                               </div>
                             </div>
                         </div>
-                        <p class="text-start">{{video.content|safe}}</p>
+                        <p class="text-start">{{video.content|}}</p>
                     </div>
                 </div>
               </div>
@@ -132,7 +132,7 @@
                                   <span>{{comment.date_added|timesince}} ago</span>
                                 </div>
                                 <div class="comment-content">
-                                  {{comment.comment|safe|linebreaks}}
+                                  {{comment.comment|linebreaks}}
                                 </div>
                               </div>
                             <button type="button" class="btn btn-outline-danger btn-sm m-1" for="btncheck1"><i class="fa-solid fa-reply"></i></button>
@@ -152,7 +152,7 @@
                                       <span>{{reply.date_added|timesince}} ago</span>
                                     </div>
                                     <div class="comment-content">
-                                      {{reply.comment|safe|linebreaks}}
+                                      {{reply.comment|linebreaks}}
                                     </div>
                                   </div>
                                 </div>
