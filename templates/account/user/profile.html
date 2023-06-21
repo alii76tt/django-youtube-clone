@@ -39,8 +39,13 @@
             </div>
         </div>
         <div class="text-center mt-5">
-            <div class="alert alert-primary fs-3" role="alert">
+            <div class="alert alert-primary fs-5" role="alert">
                 Update your Profile <a href="{% url 'account:updateUserProfile' %}" class="alert-link">Update <i class="fa-solid fa-user-pen"></i></a>
+            </div>
+        </div>
+        <div class="text-center mt-5">
+            <div class="alert alert-info fs-5" role="alert">
+                Change your Password <a href="{% url 'account:changeUserPassword' %}" class="alert-link">Change <i class="fa-solid fa-user-pen"></i></a>
             </div>
         </div>
         {% if channel %}
@@ -71,13 +76,13 @@
         </div>
         <div class="mb-3"></div>
         <div class="text-center mt-5">
-            <div class="alert alert-danger fs-3" role="alert">
+            <div class="alert alert-danger fs-5" role="alert">
                 Update your Channel <a href="{% url 'channel:updateChannel'  channel.id %}" class="alert-link">Update <i class="fa-solid fa-pen-to-square"></i></a>
             </div>
         </div>
         {% else %}
             <div class="text-center mt-5">
-                <div class="alert alert-dark fs-3" role="alert">
+                <div class="alert alert-dark fs-5" role="alert">
                     Please create your channel! <a href="{% url 'channel:createChannel' %}" class="alert-link">Create New Channel <i class="fa-solid fa-square-plus"></i></a>
                 </div>
             </div>

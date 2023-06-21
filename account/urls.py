@@ -10,4 +10,5 @@ urlpatterns = [
     # user
     path("profile/", userProfile, name="userProfile"),
     path("update/profile/", updateUserProfile, name="updateUserProfile"),
+    path("change/password/", changeUserPassword, name="changeUserPassword"),
 ]

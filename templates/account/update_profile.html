@@ -37,10 +37,9 @@
                     </div>
                 </div>
                 
-                <div class="row mb-3">
+                <div class="row mb-3 text-center">
                     <div class="col">
-                        <label for="password" class="form-label">Password</label>
-                        {{form.password}}
+                        <a href="{% url 'account:changeUserPassword' %}" class="btn btn-info">Change Password</a>
                     </div>
                 </div>
                 <div class="mb-3 text-center">

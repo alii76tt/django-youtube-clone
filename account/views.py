@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from video.models import Video
 from channel.models import Channel
-from .forms import UserUpdateForm
+from .forms import UserUpdateForm, ChangeUserPasswordForm
 
 
 def loginView(request):
@@ -113,3 +113,21 @@ def updateUserProfile(request):
 
     user_form = UserUpdateForm(instance=request.user)
     return render(request, 'account/update_profile.html', {'form': user_form})
+
+@login_required 
+def changeUserPassword(request):
+
+    form = ChangeUserPasswordForm(data=request.POST, user=request.user)
+    if request.method == "POST":
+        if form.is_valid():
+            form.save()
+            user = authenticate(request, username=request.user.username, password=form.new_password2)
+            login(request, user)
+            messages.success(
+                request, 'Your password has been successfully updated.')
+            return redirect("account:userProfile")
+
+    context = {
+        'form': form
+    }
+    return render(request, 'account/change_password.html', context)

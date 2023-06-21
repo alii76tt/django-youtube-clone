@@ -11,6 +11,11 @@ def subscribeView(request, id):
     if Channel.objects.filter(user_id=request.user.id).exists():
         channel = get_object_or_404(
             Channel, id=request.POST.get('video_subscribe_id'))
+        
+        if channel.user == request.user:
+            messages.warning(request, 'You cannot subscribe to your own channel!')
+            return redirect('channel:channelDetail', id=id)
+        
         subscribe = False
         if channel.subscribers.filter(id=request.user.id).exists():
             channel.subscribers.remove(request.user)
@@ -111,10 +116,12 @@ def deleteChannel(request, id):
 
     return redirect('video:index')
 
+@login_required
 def subscriptionsList(request):
-    videos = Video.objects.raw(f"SELECT * from video_video WHERE channel_id=(SELECT channel_id FROM channel_channel_subscribers WHERE user_id={request.user.id})")
+    channels = Channel.objects.filter(subscribers=request.user)
+    videos = Video.objects.filter(channel__in=channels)
     context = {
-        'channels': Channel.objects.filter(subscribers=request.user.id),
+        'channels': channels,
         'videos': videos
     }
     return render(request, 'channel/subscriptions_list.html', context)

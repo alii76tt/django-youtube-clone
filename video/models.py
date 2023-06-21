@@ -6,6 +6,7 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 from ckeditor.fields import RichTextField
 from channel.models import Channel
+from django.core.validators import FileExtensionValidator
 
 
 class Video(models.Model):
@@ -18,7 +19,7 @@ class Video(models.Model):
     title = models.CharField(max_length=120, verbose_name="Video Title")
     content = RichTextField(verbose_name="Video Content")
     cover_image = models.ImageField(null=True, upload_to='video/cover_image/')
-    video = models.FileField(upload_to='videos/')
+    video = models.FileField(upload_to='videos/',validators=[FileExtensionValidator(allowed_extensions=['mp4'])])
     status = models.CharField(default="True", choices=STATUS, max_length=6)
     slug = models.SlugField(unique=True, editable=False, max_length=200)
     publishing_date = models.DateTimeField(
