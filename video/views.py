@@ -209,7 +209,7 @@ def userLibrary(request):
     return render(request, 'channel/library.html', context)
 
 def userLibraryVideos(request, id):
-    videos = Video.objects.raw(f"SELECT * FROM video_video WHERE id=(SELECT video_id FROM video_watchlater_videos WHERE id={id})")
+    videos = Video.objects.filter(id__in=WatchLater.objects.filter(id=id).values_list('id', flat=True))
     context = {
         'library': WatchLater.objects.get(id=id),
         'videos': videos,
